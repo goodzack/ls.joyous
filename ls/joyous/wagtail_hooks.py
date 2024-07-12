@@ -6,8 +6,8 @@ from django.templatetags.static import static
 from django.http import HttpResponse
 from django.utils.html import format_html
 from wagtail import hooks
-from wagtail.contrib.modeladmin.options import ModelAdmin
-from wagtail.contrib.modeladmin.options import modeladmin_register
+from wagtail.snippets.models import register_snippet
+from wagtail.snippets.views.snippets import SnippetViewSet
 from .models import EventCategory, CalendarPage, CalendarPageForm
 from .formats import NullHandler, ICalHandler, GoogleCalendarHandler, RssHandler
 
@@ -35,7 +35,7 @@ CalendarPageForm.registerImportHandler(ICalHandler())
 CalendarPageForm.registerExportHandler(ICalHandler())
 
 # ------------------------------------------------------------------------------
-class EventCategoryAdmin(ModelAdmin):
+class EventCategoryViewSet(SnippetViewSet):
     model = EventCategory
     menu_icon = 'tag'
     menu_label = 'Event Categories'
@@ -46,7 +46,7 @@ class EventCategoryAdmin(ModelAdmin):
     list_filter = ()
     search_fields = ('name',)
 
-modeladmin_register(EventCategoryAdmin)
+register_snippet(EventCategoryViewSet)
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
