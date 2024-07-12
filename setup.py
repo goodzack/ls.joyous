@@ -14,7 +14,7 @@ from setuptools.command.test import test as TestCommand
 here = Path(__file__).resolve().parent
 os.chdir(str(here))
 
-with io.open("README.rst", encoding="utf-8") as readme:
+with io.open("README.md", encoding="utf-8") as readme:
     README = readme.read()
 
 class RunTests(TestCommand):
