@@ -94,6 +94,8 @@ def create_timezone(tz, first_date=None, last_date=None):
     #   if dst[name] or bst[name]:
 
     # looking for the first and last transition time we need to include
+    #! WARNING ! pytz no longer provides tz._utc_transitiontimes.
+    #! It is possible that this is no longer needed when using icalendar v6
     first_num, last_num = 0, len(tz._utc_transition_times) - 1
     first_tt = tz._utc_transition_times[0]
     last_tt = tz._utc_transition_times[-1]
