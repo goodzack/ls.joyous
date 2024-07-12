@@ -5,6 +5,7 @@ import datetime as dt
 import pytz
 import base64
 import quopri
+import zoneinfo
 from contextlib import suppress
 from collections import defaultdict
 from zipfile import is_zipfile, ZipFile
@@ -72,6 +73,7 @@ class ICalHandler:
         response = HttpResponse(vcal.to_ical(), content_type='text/calendar')
         response['Content-Disposition'] = \
             'attachment; filename={}.ics'.format(page.slug)
+        
         return response
 
     def load(self, page, request, upload, **kwargs):
@@ -136,11 +138,11 @@ class VCalendar(Calendar, VComponentMixin):
                 vevents.append(vchild)
             if event.tz and event.tz is not pytz.utc:
                 tzs[event.tz].add(vevent)
-        for tz, vspan in tzs.items():
-            vtz = vspan.createVTimeZone(tz)
-            # Put timezones up top. The RFC doesn't require this, but everyone
-            # else does it.
-            vcal.add_component(vtz)
+        # for tz, vspan in tzs.items():
+        #     vtz = vspan.createVTimeZone(tz)
+        #     # Put timezones up top. The RFC doesn't require this, but everyone
+        #     # else does it.
+        #     vcal.add_component(vtz)
         vcal.subcomponents.extend(vevents)
         return vcal
 
@@ -148,9 +150,9 @@ class VCalendar(Calendar, VComponentMixin):
     def _fromEventPage(cls, event):
         vcal = cls(cls._findCalendarFor(event))
         vevent = cls.factory.makeFromPage(event, vcal.page)
-        if event.tz and event.tz is not pytz.utc:
-            vtz = TimeZoneSpan(vevent).createVTimeZone(event.tz)
-            vcal.add_component(vtz)
+        # if event.tz and event.tz is not pytz.utc:
+        #     vtz = TimeZoneSpan(vevent).createVTimeZone(event.tz)
+        #     vcal.add_component(vtz)
         vcal.add_component(vevent)
         for vchild in vevent.vchildren:
             vcal.add_component(vchild)
